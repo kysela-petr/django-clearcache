@@ -15,8 +15,8 @@ class ClearCacheAdminView(UserPassesTestMixin, FormView):
     success_url = reverse_lazy('clearcache_admin')
 
     def test_func(self):
-        # Only super user can clear caches via admin.
-        return self.request.user.is_superuser
+        # Only super user or clearcache grou users can clear caches via admin
+        return self.request.user.is_superuser or self.request.user.groups.filter(name="clearcache").exists()
 
     def dispatch(self, request, *args, **kwargs):
         response = super().dispatch(request, args, kwargs)
